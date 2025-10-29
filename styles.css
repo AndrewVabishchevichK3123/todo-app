@@ -67,3 +67,17 @@ body {
   font-size: 12px;
   cursor: pointer;
 }
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.controls select,
+.controls input {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
