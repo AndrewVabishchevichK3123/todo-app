@@ -55,18 +55,38 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderTasks() {
-    taskList.innerHTML = '';
-    tasks.forEach(task => {
-      const li = document.createElement('li');
-      li.className = 'task';
-      if (task.completed) li.classList.add('completed');
+  taskList.innerHTML = '';
+  tasks.forEach(task => {
+    const li = document.createElement('li');
+    li.className = 'task';
+    if (task.completed) li.classList.add('completed');
 
-      const span = document.createElement('span');
-      span.className = 'task-text';
-      span.textContent = `${task.text} (${task.date})`;
+    const span = document.createElement('span');
+    span.className = 'task-text';
+    span.textContent = `${task.text} (${task.date})`;
 
-      li.append(span);
-      taskList.append(li);
+    const actions = document.createElement('div');
+    actions.className = 'task-actions';
+
+    const completeBtn = document.createElement('button');
+    completeBtn.textContent = task.completed ? '↩️' : '✅';
+    completeBtn.addEventListener('click', () => {
+      task.completed = !task.completed;
+      saveTasks();
+      renderTasks();
     });
-  }
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = '🗑️';
+    deleteBtn.addEventListener('click', () => {
+      tasks = tasks.filter(t => t.id !== task.id);
+      saveTasks();
+      renderTasks();
+    });
+
+    actions.append(completeBtn, deleteBtn);
+    li.append(span, actions);
+    taskList.append(li);
+  });
+}
 });

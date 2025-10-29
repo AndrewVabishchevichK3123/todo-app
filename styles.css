@@ -60,3 +60,10 @@ body {
 .task-text {
   margin-right: 10px;
 }
+
+.task-actions button {
+  margin-left: 5px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+}
