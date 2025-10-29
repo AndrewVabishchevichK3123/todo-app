@@ -34,12 +34,39 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     tasks.push(newTask);
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    saveTasks();
+    renderTasks();
     taskInput.value = '';
   });
 
   formGroup.append(taskInput, dateInput, addButton);
   container.append(formGroup);
 
+  const taskList = document.createElement('ul');
+  taskList.className = 'tasks';
+  container.append(taskList);
+
   document.body.append(container);
+
+  renderTasks();
+
+  function saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }
+
+  function renderTasks() {
+    taskList.innerHTML = '';
+    tasks.forEach(task => {
+      const li = document.createElement('li');
+      li.className = 'task';
+      if (task.completed) li.classList.add('completed');
+
+      const span = document.createElement('span');
+      span.className = 'task-text';
+      span.textContent = `${task.text} (${task.date})`;
+
+      li.append(span);
+      taskList.append(li);
+    });
+  }
 });

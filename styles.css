@@ -42,3 +42,21 @@ body {
   flex: 1;
   min-width: 150px;
 }
+
+.tasks {
+  list-style: none;
+}
+
+.task {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.task.completed .task-text {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.task-text {
+  margin-right: 10px;
+}
