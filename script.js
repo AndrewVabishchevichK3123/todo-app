@@ -1,3 +1,5 @@
+let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+
 document.addEventListener('DOMContentLoaded', () => {
   const container = document.createElement('div');
   container.className = 'container';
@@ -19,6 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const addButton = document.createElement('button');
   addButton.textContent = 'Добавить';
+  addButton.addEventListener('click', () => {
+    const text = taskInput.value.trim();
+    const date = dateInput.value;
+    if (!text || !date) return;
+
+    const newTask = {
+      id: Date.now(),
+      text,
+      date,
+      completed: false
+    };
+
+    tasks.push(newTask);
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+    taskInput.value = '';
+  });
 
   formGroup.append(taskInput, dateInput, addButton);
   container.append(formGroup);
