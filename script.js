@@ -95,10 +95,37 @@ document.addEventListener('DOMContentLoaded', () => {
         return matchesFilter && matchesSearch;
     });
 
-    taskList.innerHTML = '';
+    while (taskList.firstChild) {
+        taskList.removeChild(taskList.firstChild);
+    }
     filtered.forEach(task => {
         const li = document.createElement('li');
         li.className = 'task';
+
+        li.draggable = true;
+        li.setAttribute('data-id', task.id);
+
+        li.addEventListener('dragstart', () => {
+        li.classList.add('draggable');
+        setTimeout(() => li.style.opacity = '0.4', 0);
+        });
+
+        li.addEventListener('dragend', () => {
+        li.classList.remove('draggable');
+        li.style.opacity = '1';
+        });
+
+        li.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(taskList, e.clientY);
+        const draggable = document.querySelector('.draggable');
+        if (afterElement == null) {
+            taskList.appendChild(draggable);
+        } else {
+            taskList.insertBefore(draggable, afterElement);
+        }
+        });
+        
         if (task.completed) li.classList.add('completed');
 
         const span = document.createElement('span');
@@ -142,6 +169,18 @@ document.addEventListener('DOMContentLoaded', () => {
         li.append(span, actions);
         taskList.append(li);
     });
+
+    const taskElements = Array.from(taskList.children);
+    const newOrder = taskElements.map(el => {
+    const id = Number(el.getAttribute('data-id'));
+    return tasks.find(t => t.id === id);
+    }).filter(Boolean);
+
+    if (newOrder.length === tasks.length) {
+    tasks = newOrder;
+    saveTasks(); // сохраняем новый порядок
+    }
+
     }
     });
 
@@ -149,4 +188,17 @@ document.addEventListener('DOMContentLoaded', () => {
 function isValidDate(dateString) {
   const d = new Date(dateString);
   return d instanceof Date && !isNaN(d) && dateString === d.toISOString().split('T')[0];
+}
+
+function getDragAfterElement(container, y) {
+  const draggableElements = [...container.querySelectorAll('.task:not(.draggable)')];
+  return draggableElements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    if (offset < 0 && offset > closest.offset) {
+      return { offset, element: child };
+    } else {
+      return closest;
+    }
+  }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
