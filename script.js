@@ -104,3 +104,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 }
 });
+
+function isValidDate(dateString) {
+  const d = new Date(dateString);
+  return d instanceof Date && !isNaN(d) && dateString === d.toISOString().split('T')[0];
+}
