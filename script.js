@@ -84,7 +84,21 @@ document.addEventListener('DOMContentLoaded', () => {
       renderTasks();
     });
 
-    actions.append(completeBtn, deleteBtn);
+    const editBtn = document.createElement('button');
+    editBtn.textContent = '✏️';
+    editBtn.addEventListener('click', () => {
+    const newText = prompt('Новый текст:', task.text);
+    if (newText === null) return;
+    const newDate = prompt('Новая дата (ГГГГ-ММ-ДД):', task.date);
+    if (newDate === null || !isValidDate(newDate)) return;
+    task.text = newText.trim();
+    task.date = newDate;
+    saveTasks();
+    renderTasks();
+    });
+
+    actions.append(completeBtn, editBtn, deleteBtn);
+
     li.append(span, actions);
     taskList.append(li);
   });
